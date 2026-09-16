@@ -1,0 +1,4 @@
+/* Punto de entrada del design system. Se importa una sola vez en main.js. */
+@import './tokens.css';
+@import './base.css';
+@import './components.css';

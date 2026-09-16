@@ -3,6 +3,18 @@ import router from '../router'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 
+// El guard del router lee el store de forma síncrona, antes de que
+// `cargarLocalStorage` termine. Sin esto, recargar una ruta protegida
+// rebota siempre a /ingreso aunque haya sesión guardada.
+function usuarioGuardado() {
+  try {
+    const stored = localStorage.getItem('usuario')
+    return stored ? JSON.parse(stored) : null
+  } catch {
+    return null
+  }
+}
+
 function authHeaders(token) {
   return {
     'Content-Type': 'application/json',
@@ -20,7 +32,7 @@ export default createStore({
       estado: '',
       numero: 0
     },
-    user: null,
+    user: usuarioGuardado(),
     error: null
   },
   mutations: {

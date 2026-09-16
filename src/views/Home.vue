@@ -1,13 +1,9 @@
 <template>
-  <div class="row">
-    <div class="col-sm-4">
-      <form @submit.prevent="procesarFormulario">
-        <TareaForm v-model:tarea="tarea" :isEditar="false" />
-      </form>
-    </div>
-    <div class="col-sm-8">
-      <ListaTareas />
-    </div>
+  <div class="workspace">
+    <form @submit.prevent="procesarFormulario">
+      <TareaForm v-model:tarea="tarea" :isEditar="false" />
+    </form>
+    <ListaTareas />
   </div>
 </template>
 

@@ -1,20 +1,34 @@
 <template>
-  <div class="pwa-toast" role="alert" v-if="offlineReady || needRefresh">
-    <div class="pwa-toast-message">
-      <span v-if="offlineReady"> La aplicaci&oacute;n ya funciona sin conexi&oacute;n. </span>
-      <span v-else> Hay una nueva versi&oacute;n disponible. </span>
-    </div>
-    <button class="form-button button-l" v-if="needRefresh" @click="updateServiceWorker(true)">
-      Actualizar
-    </button>
-    <button class="form-button button-l ml-2" @click="cerrar">Cerrar</button>
+  <div class="toast" role="status" v-if="offlineReady || needRefresh">
+    <span class="toast-message">
+      <span v-if="offlineReady">La aplicación ya funciona sin conexión.</span>
+      <span v-else>Hay una nueva versión disponible.</span>
+    </span>
+    <span class="toast-actions">
+      <button
+        class="btn btn-primary btn-sm"
+        type="button"
+        v-if="needRefresh"
+        @click="updateServiceWorker(true)"
+      >
+        <Icon name="refresh" :size="14" />
+        <span>Actualizar</span>
+      </button>
+      <button class="btn btn-ghost btn-sm" type="button" aria-label="Cerrar aviso" @click="cerrar">
+        <Icon name="close" :size="14" />
+      </button>
+    </span>
   </div>
 </template>
 
 <script>
 import { useRegisterSW } from 'virtual:pwa-register/vue'
+import Icon from './Icon.vue'
 
 export default {
+  components: {
+    Icon
+  },
   setup() {
     const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW()
 

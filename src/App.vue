@@ -1,9 +1,11 @@
 <template>
-  <Navbar />
-  <div class="container">
-    <router-view />
+  <div class="app-shell">
+    <Navbar />
+    <main class="app-main">
+      <router-view />
+    </main>
+    <PwaToast />
   </div>
-  <PwaToast />
 </template>
 
 <script>

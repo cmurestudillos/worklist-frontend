@@ -8,6 +8,7 @@ SPA instalable (PWA) para gestionar listas de tareas de proyectos de desarrollo.
 - **Estado:** Vuex 4
 - **Routing:** Vue Router 4
 - **Validación:** Vuelidate 2
+- **UI:** design system propio (CSS con custom properties, sin framework)
 - **Build tool:** Vite 6
 - **PWA:** vite-plugin-pwa 1 (Workbox)
 - **Linting:** ESLint 9 flat config + eslint-plugin-vue 9
@@ -57,8 +58,8 @@ La aplicación es instalable y funciona sin conexión.
 
 - **Manifest:** generado por `vite-plugin-pwa` en `/manifest.webmanifest` (configurado en `vite.config.js`).
 - **Service worker:** estrategia `generateSW` de Workbox. Precachea el shell de la aplicación (HTML, JS, CSS e iconos) y sirve `index.html` como fallback de navegación para que las rutas del SPA funcionen offline.
-- **CDN:** Bootstrap, Font Awesome y jQuery se cachean con `CacheFirst` para que la interfaz se vea correctamente sin conexión.
 - **API:** las llamadas al backend **nunca** se cachean; las tareas siempre se piden al servidor.
+- **Terceros:** ninguno. La aplicación no carga CSS ni JS externo, así que no hace falta `runtimeCaching`: todo lo que necesita está precacheado.
 - **Actualizaciones:** modo `prompt`. Cuando hay una versión nueva, `PwaToast.vue` muestra un aviso con un botón *Actualizar* en lugar de recargar sin avisar.
 - **Iconos:** en `public/assets/` (`pwa-64x64`, `pwa-192x192`, `pwa-512x512`, `maskable-icon-512x512`, `apple-touch-icon-180x180`). Se regeneran desde `logo.png` con `pnpm generate-pwa-assets` (config en `pwa-assets.config.js`).
 
@@ -69,11 +70,66 @@ La aplicación es instalable y funciona sin conexión.
 - La instalación requiere HTTPS (o `localhost`): al desplegar el frontend, el dominio debe servirse por HTTPS para que el navegador ofrezca instalar la app.
 - `workbox-window` está declarado como devDependency explícita: con pnpm no basta con la dependencia transitiva de `vite-plugin-pwa` y el build falla al resolverla.
 
+## Design system
+
+La interfaz no usa ningún framework CSS. Todo el estilo vive en `src/assets/styles/`, se importa una sola vez desde `main.js` y Vite lo empaqueta con hash.
+
+```
+src/assets/styles/
+├── index.css        # Punto de entrada — importa los tres siguientes
+├── tokens.css       # Custom properties: color, tipografía, espaciado, radios, sombras, motion
+├── base.css         # Reset, tipografía base, layout (.app-shell, .app-main, .workspace) y utilidades
+└── components.css   # Navegación, tarjetas, botones, formularios, lista de tareas, feedback, overlays
+```
+
+**Regla principal:** ningún componente escribe un valor literal que exista como token. Los colores, tamaños y espacios se toman siempre de `var(--…)`, así que cambiar la paleta es editar `tokens.css` y nada más.
+
+### Tokens
+
+| Grupo | Ejemplos |
+|-------|----------|
+| Superficies | `--color-bg`, `--color-surface-1/2/3` |
+| Texto | `--color-text`, `--color-text-muted`, `--color-text-subtle` |
+| Marca | `--color-accent` (#f0b429), `--color-accent-hover`, `--color-accent-soft` |
+| Semántico | `--color-danger`, `--color-success`, `--color-info` |
+| Prioridades | `--color-priority-urgente / -media / -relax` |
+| Espaciado | `--space-1` … `--space-12` (escala de 4px) |
+| Tipografía | `--text-xs` … `--text-2xl`, `--weight-*`, `--leading-*` |
+| Forma | `--radius-sm/md/lg/full`, `--shadow-sm/md/lg` |
+| Movimiento | `--duration-fast/base`, `--ease` |
+
+### Componentes
+
+| Clase | Qué es |
+|-------|--------|
+| `.card` + `.card-header` / `.card-body` / `.card-footer` | Superficie base de todas las secciones |
+| `.btn` + `.btn-primary` / `-secondary` / `-ghost` / `-danger`, `.btn-sm`, `.btn-block` | Jerarquía de acciones |
+| `.field` + `.field-label` / `.input` / `.field-error` | Campos de formulario |
+| `.chip` + `.chip-input` / `.chip-label` | Checkbox de categoría con aspecto de chip |
+| `.segmented` + `.segment-input` / `.segment-label` | Radio de prioridad como control segmentado |
+| `.task-list` / `.task-item` / `.tag` / `.badge-*` | Lista de tareas |
+| `.empty-state` | Lista vacía |
+| `.alert` / `.toast` | Feedback y avisos |
+
+Los patrones de chip y segmented se apoyan en `input:checked + label`: el input real queda oculto pero sigue siendo el que recibe el foco y el teclado, así que la accesibilidad se mantiene.
+
+### Iconos
+
+`src/components/shared/Icon.vue` sustituye a Font Awesome. Son trazos SVG de 24×24 definidos en un mapa dentro del propio componente; heredan `currentColor` y el grosor:
+
+```vue
+<Icon name="clock" :size="14" />
+```
+
+Para añadir uno nuevo basta con meter su `d` en el objeto `ICONS`.
+
 ## Estructura
 
 ```
 src/
-├── main.js                     # Entry point
+├── main.js                     # Entry point — importa el design system
+├── assets/
+│   └── styles/                 # Design system (tokens, base, componentes)
 ├── App.vue                     # Root — carga sesión al iniciar
 ├── store/
 │   └── index.js                # Vuex — toda la lógica de llamadas a la API
@@ -89,6 +145,7 @@ src/
     ├── ListaTareas.vue         # Tabla de tareas
     └── shared/
         ├── Navbar.vue          # Barra de navegación
+        ├── Icon.vue            # Iconos SVG inline
         └── PwaToast.vue        # Aviso de nueva versión / modo offline
 ```
 
