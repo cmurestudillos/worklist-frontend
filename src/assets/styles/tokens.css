@@ -1,0 +1,106 @@
+/* =========================================================================
+   Design tokens — WorkList
+   Única fuente de verdad de color, espaciado, tipografía, radios y sombras.
+   Ningún componente debe escribir un valor literal que exista aquí.
+   ========================================================================= */
+
+:root {
+  /* --- Color: superficies ------------------------------------------------ */
+  --color-bg: #16181d;
+  --color-bg-gradient: radial-gradient(120% 80% at 50% 0%, #1e222b 0%, #16181d 55%, #101216 100%);
+  --color-surface-1: #1c1f26;
+  --color-surface-2: #232730;
+  --color-surface-3: #2b303b;
+  --color-overlay: rgba(10, 11, 14, 0.72);
+
+  /* --- Color: bordes ----------------------------------------------------- */
+  --color-border: #2c313b;
+  --color-border-strong: #3c4453;
+
+  /* --- Color: texto ------------------------------------------------------ */
+  --color-text: #e8eaed;
+  --color-text-muted: #a6adba;
+  --color-text-subtle: #767f8e;
+  --color-text-on-accent: #17191e;
+
+  /* --- Color: marca ------------------------------------------------------ */
+  --color-accent: #f0b429;
+  --color-accent-hover: #f7c445;
+  --color-accent-active: #d99a12;
+  --color-accent-soft: rgba(240, 180, 41, 0.12);
+  --color-accent-soft-hover: rgba(240, 180, 41, 0.2);
+  --color-accent-border: rgba(240, 180, 41, 0.38);
+
+  /* --- Color: semántico -------------------------------------------------- */
+  --color-danger: #ef5b6b;
+  --color-danger-soft: rgba(239, 91, 107, 0.14);
+  --color-danger-border: rgba(239, 91, 107, 0.4);
+  --color-success: #3fbf87;
+  --color-success-soft: rgba(63, 191, 135, 0.14);
+  --color-info: #5aa9e6;
+  --color-info-soft: rgba(90, 169, 230, 0.14);
+
+  /* --- Color: prioridades de tarea --------------------------------------- */
+  --color-priority-urgente: var(--color-danger);
+  --color-priority-urgente-soft: var(--color-danger-soft);
+  --color-priority-media: var(--color-accent);
+  --color-priority-media-soft: var(--color-accent-soft);
+  --color-priority-relax: var(--color-success);
+  --color-priority-relax-soft: var(--color-success-soft);
+
+  /* --- Tipografía -------------------------------------------------------- */
+  --font-sans:
+    'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, 'Cascadia Mono', Consolas, 'Liberation Mono', monospace;
+
+  --text-xs: 0.6875rem; /* 11px */
+  --text-sm: 0.8125rem; /* 13px */
+  --text-base: 0.9375rem; /* 15px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.375rem; /* 22px */
+  --text-2xl: 1.75rem; /* 28px */
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.55;
+
+  --tracking-wide: 0.06em;
+
+  /* --- Espaciado (escala de 4) ------------------------------------------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+
+  /* --- Radios ------------------------------------------------------------ */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 999px;
+
+  /* --- Sombras ----------------------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.45);
+
+  /* --- Movimiento -------------------------------------------------------- */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --ease: cubic-bezier(0.2, 0, 0.2, 1);
+
+  /* --- Layout ------------------------------------------------------------ */
+  --layout-max: 1180px;
+  --layout-gutter: var(--space-6);
+  --sidebar-width: 360px;
+  --focus-ring: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-accent);
+}

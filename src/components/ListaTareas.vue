@@ -1,54 +1,79 @@
 <template>
-  <div class="tareas-container text-c animated flipInX">
-    <h3 class="text-whitesmoke">Lista de Tareas</h3>
-    <div class="container-content">
-      <!-- {{tareas}} -->
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col" class="text-darkyellow">Nombre</th>
-            <th scope="col" class="text-darkyellow">Categorias</th>
-            <th scope="col" class="text-darkyellow">Estado</th>
-            <th scope="col" class="text-darkyellow">Tiempo</th>
-            <th scope="col" class="text-darkyellow">Opciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in tareas" :key="item.id">
-            <td class="text-whitesmoke">{{ item.nombre }}</td>
-            <td class="text-whitesmoke">
-              <span v-for="(cat, index) in item.categorias" :key="index">
-                {{ item.categorias.length === index + 1 ? cat : cat + ', ' }}
+  <section class="card">
+    <header class="card-header">
+      <h2 class="card-title">
+        <Icon name="list" :size="18" />
+        <span>Lista de tareas</span>
+        <span class="count-pill">{{ tareas.length }}</span>
+      </h2>
+      <span class="text-muted text-sm" v-if="horasTotales > 0">{{ horasTotales }} h estimadas</span>
+    </header>
+
+    <div class="card-body card-body-flush">
+      <ul class="task-list" v-if="tareas.length">
+        <li class="task-item" v-for="item in tareas" :key="item.id">
+          <div class="task-main">
+            <span class="task-name">{{ item.nombre }}</span>
+            <div class="task-meta">
+              <span class="badge" :class="`badge-${item.estado}`" v-if="item.estado">
+                <span class="dot"></span>
+                {{ item.estado }}
               </span>
-            </td>
-            <td class="text-whitesmoke">{{ item.estado }}</td>
-            <td class="text-whitesmoke">{{ item.numero }} Hrs.</td>
-            <td>
-              <div class="row">
-                <div class="col">
-                  <button class="form-button button-l margin-b" @click="deleteTareas(item.id)">
-                    Eliminar
-                  </button>
-                </div>
-                <div class="col">
-                  <router-link :to="{ name: 'Editar', params: { id: item.id } }">
-                    <button class="form-button button-l margin-b">Editar</button>
-                  </router-link>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <span class="tag" v-for="(cat, index) in item.categorias" :key="index">{{
+                cat
+              }}</span>
+              <span class="meta-time" v-if="item.numero">
+                <Icon name="clock" :size="12" />
+                {{ item.numero }} h
+              </span>
+            </div>
+          </div>
+
+          <div class="task-actions">
+            <router-link
+              class="btn btn-ghost btn-sm"
+              :to="{ name: 'Editar', params: { id: item.id } }"
+            >
+              <Icon name="edit" :size="14" />
+              <span>Editar</span>
+            </router-link>
+            <button
+              class="btn btn-danger btn-sm"
+              type="button"
+              :title="`Eliminar ${item.nombre}`"
+              @click="deleteTareas(item.id)"
+            >
+              <Icon name="trash" :size="14" />
+              <span>Eliminar</span>
+            </button>
+          </div>
+        </li>
+      </ul>
+
+      <div class="empty-state" v-else>
+        <span class="empty-state-icon">
+          <Icon name="clipboard" :size="24" />
+        </span>
+        <p class="empty-state-title">Todavía no hay tareas</p>
+        <p class="text-sm">Crea la primera desde el formulario y aparecerá aquí.</p>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Icon from './shared/Icon.vue'
+
 export default {
+  components: {
+    Icon
+  },
   computed: {
-    ...mapState(['tareas'])
+    ...mapState(['tareas']),
+    horasTotales() {
+      return this.tareas.reduce((total, item) => total + (Number(item.numero) || 0), 0)
+    }
   },
   methods: {
     ...mapActions(['deleteTareas'])

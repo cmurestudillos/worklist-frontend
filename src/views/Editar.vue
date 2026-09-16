@@ -1,13 +1,9 @@
 <template>
-  <div class="row">
-    <div class="col-sm-4">
-      <form @submit.prevent="submitUpdate">
-        <TareaForm v-model:tarea="localTarea" :isEditar="true" />
-      </form>
-    </div>
-    <div class="col-sm-8">
-      <ListaTareas />
-    </div>
+  <div class="workspace">
+    <form @submit.prevent="submitUpdate">
+      <TareaForm :key="localTarea.id" v-model:tarea="localTarea" :isEditar="true" />
+    </form>
+    <ListaTareas />
   </div>
 </template>
 

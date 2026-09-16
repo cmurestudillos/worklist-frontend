@@ -1,44 +1,34 @@
 <template>
-  <div class="navbar navbar-dark">
-    <router-link to="/" class="navbar-brand" v-if="usuarioAutenticado">
-      <img
-        src="/assets/logo.png"
-        width="98"
-        height="98"
-        title="Work List Vue.js"
-        alt="Work List Vue.js"
-        class="rounded mx-auto d-block"
-      />
-    </router-link>
-    <div class="row">
-      <div class="col-sm-2">
-        <span class="text-white" v-if="usuarioAutenticado">Hola:</span>
-      </div>
-      <div class="col-sm-10">
-        <span class="text-darkyellow text-center ml-2" v-if="usuarioAutenticado">
-          {{ datosUsuario }}
+  <header class="app-nav">
+    <div class="app-nav-inner">
+      <router-link :to="usuarioAutenticado ? '/' : '/ingreso'" class="brand">
+        <img src="/assets/logo.png" width="32" height="32" alt="" class="brand-logo" />
+        <span class="brand-name">Work List</span>
+      </router-link>
+
+      <div class="nav-user" v-if="usuarioAutenticado">
+        <span class="user-chip" :title="datosUsuario">
+          <Icon name="user" :size="14" />
+          <span class="user-chip-email">{{ datosUsuario }}</span>
         </span>
-        <div class="row pt-1">
-          <div class="col-sm-12">
-            <button
-              class="form-button button-l margin-b"
-              v-if="usuarioAutenticado"
-              @click="cerrarSesion"
-            >
-              Cerrar Sesi&oacute;n
-            </button>
-          </div>
-        </div>
+        <button class="btn btn-ghost btn-sm" type="button" @click="cerrarSesion">
+          <Icon name="logout" :size="14" />
+          <span>Salir</span>
+        </button>
       </div>
     </div>
-  </div>
+  </header>
 </template>
 
 <script>
 // Propiedades de VUEX
 import { mapActions, mapGetters } from 'vuex'
+import Icon from './Icon.vue'
 
 export default {
+  components: {
+    Icon
+  },
   computed: {
     ...mapGetters(['usuarioAutenticado', 'datosUsuario'])
   },
